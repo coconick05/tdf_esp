@@ -75,7 +75,7 @@ with col1:
 with col2:
     st.markdown("### 💡 Preguntas sugeridas:")
     
-    # NUEVAS preguntas sugeridas sobre el nuevo texto
+    # Preguntas sugeridas sobre el nuevo texto
     if st.button("¿Dónde prepara el chef la sopa?", use_container_width=True):
         st.session_state.question = "¿Dónde prepara el chef la sopa?"
         st.rerun()
@@ -109,4 +109,42 @@ if st.button("🔍 Analizar", type="primary"):
         st.error("⚠️ Escribe una pregunta.")
     else:
         # Crear vectorizador TF-IDF
-        vectorizer =
+        vectorizer = TfidfVectorizer(
+            tokenizer=tokenize_and_stem,
+            token_pattern=None,
+            min_df=1  # Incluir todas las palabras
+        )
+        
+        # Ajustar con documentos
+        X = vectorizer.fit_transform(documents)
+        
+        # Mostrar matriz TF-IDF
+        st.markdown("### 📊 Matriz TF-IDF")
+        df_tfidf = pd.DataFrame(
+            X.toarray(),
+            columns=vectorizer.get_feature_names_out(),
+            index=[f"Doc {i+1}" for i in range(len(documents))]
+        )
+        # Tabla con texto fucsia
+        styled_df = df_tfidf.round(3).style.set_properties(**{"color": FUCSIA})
+        st.dataframe(styled_df, use_container_width=True)
+        
+        # Calcular similitud con la pregunta
+        question_vec = vectorizer.transform([question])
+        similarities = cosine_similarity(question_vec, X).flatten()
+        
+        # Encontrar mejor respuesta
+        best_idx = similarities.argmax()
+        best_doc = documents[best_idx]
+        best_score = similarities[best_idx]
+        
+        # Mostrar respuesta
+        st.markdown("### 🎯 Respuesta")
+        st.markdown(f"**Tu pregunta:** {question}")
+        
+        if best_score > 0.01:  # Umbral muy bajo
+            st.success(f"**Respuesta:** {best_doc}")
+            st.info(f"📈 Similitud: {best_score:.3f}")
+        else:
+            st.warning(f"**Respuesta (baja confianza):** {best_doc}")
+            st.info(f"📉 Similitud: {best_score:.3f}")
