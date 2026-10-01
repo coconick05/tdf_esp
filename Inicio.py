@@ -5,6 +5,42 @@ import pandas as pd
 import re
 from nltk.stem import SnowballStemmer
 
+# Color fucsia
+FUCSIA = "#FF00FF"
+
+st.markdown(
+    f"""
+    <style>
+    /* Todos los textos en fucsia */
+    .stApp, .stApp p, .stApp span, .stApp label, .stApp li,
+    .stApp h1, .stApp h2, .stApp h3, .stApp h4, .stApp h5, .stApp h6,
+    .stApp div[data-testid="stMarkdownContainer"] *,
+    .stApp [data-testid="stWidgetLabel"] *,
+    .stApp [data-testid="stAlert"] *,
+    .stApp textarea, .stApp input,
+    .stApp button, .stApp button * {{
+        color: {FUCSIA} !important;
+    }}
+
+    /* Placeholder de los inputs */
+    .stApp textarea::placeholder, .stApp input::placeholder {{
+        color: {FUCSIA} !important;
+        opacity: 0.6;
+    }}
+
+    /* Botones: fondo transparente y borde fucsia para que el texto se lea bien */
+    .stApp button {{
+        background-color: transparent !important;
+        border: 1px solid {FUCSIA} !important;
+    }}
+    .stApp button:hover {{
+        background-color: rgba(255, 0, 255, 0.15) !important;
+    }}
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
 st.title("🔍 Demo TF-IDF en Español")
 
 # Documentos de ejemplo
@@ -88,7 +124,9 @@ if st.button("🔍 Analizar", type="primary"):
             columns=vectorizer.get_feature_names_out(),
             index=[f"Doc {i+1}" for i in range(len(documents))]
         )
-        st.dataframe(df_tfidf.round(3), use_container_width=True)
+        # Tabla con texto fucsia
+        styled_df = df_tfidf.round(3).style.set_properties(**{"color": FUCSIA})
+        st.dataframe(styled_df, use_container_width=True)
         
         # Calcular similitud con la pregunta
         question_vec = vectorizer.transform([question])
