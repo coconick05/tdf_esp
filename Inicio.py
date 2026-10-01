@@ -43,13 +43,13 @@ st.markdown(
 
 st.title("🔍 Demo TF-IDF en Español")
 
-# Documentos de ejemplo
-default_docs = """El perro ladra fuerte en el parque.
-El gato maúlla suavemente durante la noche.
-El perro y el gato juegan juntos en el jardín.
-Los niños corren y se divierten en el parque.
-La música suena muy alta en la fiesta.
-Los pájaros cantan hermosas melodías al amanecer."""
+# Documentos de ejemplo (NUEVO TEXTO)
+default_docs = """El chef prepara una sopa deliciosa en la cocina del restaurante.
+La panadera hornea pan fresco muy temprano en la mañana.
+Los estudiantes estudian matemáticas en la biblioteca de la universidad.
+El astronauta observa las estrellas desde la estación espacial.
+Los turistas visitan el museo de arte en el centro de la ciudad.
+La doctora atiende a los pacientes en el hospital durante la noche."""
 
 # Stemmer en español
 stemmer = SnowballStemmer("spanish")
@@ -70,30 +70,30 @@ col1, col2 = st.columns([2, 1])
 
 with col1:
     text_input = st.text_area("📝 Documentos (uno por línea):", default_docs, height=150)
-    question = st.text_input("❓ Escribe tu pregunta:", "¿Dónde juegan el perro y el gato?")
+    question = st.text_input("❓ Escribe tu pregunta:", "¿Dónde prepara el chef la sopa?")
 
 with col2:
     st.markdown("### 💡 Preguntas sugeridas:")
     
-    # NUEVAS preguntas optimizadas para mayor similitud
-    if st.button("¿Dónde juegan el perro y el gato?", use_container_width=True):
-        st.session_state.question = "¿Dónde juegan el perro y el gato?"
+    # NUEVAS preguntas sugeridas sobre el nuevo texto
+    if st.button("¿Dónde prepara el chef la sopa?", use_container_width=True):
+        st.session_state.question = "¿Dónde prepara el chef la sopa?"
         st.rerun()
     
-    if st.button("¿Qué hacen los niños en el parque?", use_container_width=True):
-        st.session_state.question = "¿Qué hacen los niños en el parque?"
+    if st.button("¿Cuándo hornea el pan la panadera?", use_container_width=True):
+        st.session_state.question = "¿Cuándo hornea el pan la panadera?"
         st.rerun()
         
-    if st.button("¿Cuándo cantan los pájaros?", use_container_width=True):
-        st.session_state.question = "¿Cuándo cantan los pájaros?"
+    if st.button("¿Qué estudian los estudiantes en la biblioteca?", use_container_width=True):
+        st.session_state.question = "¿Qué estudian los estudiantes en la biblioteca?"
         st.rerun()
         
-    if st.button("¿Dónde suena la música alta?", use_container_width=True):
-        st.session_state.question = "¿Dónde suena la música alta?"
+    if st.button("¿Qué observa el astronauta desde la estación espacial?", use_container_width=True):
+        st.session_state.question = "¿Qué observa el astronauta desde la estación espacial?"
         st.rerun()
         
-    if st.button("¿Qué animal maúlla durante la noche?", use_container_width=True):
-        st.session_state.question = "¿Qué animal maúlla durante la noche?"
+    if st.button("¿Dónde visitan los turistas el museo de arte?", use_container_width=True):
+        st.session_state.question = "¿Dónde visitan los turistas el museo de arte?"
         st.rerun()
 
 # Actualizar pregunta si se seleccionó una sugerida
@@ -109,41 +109,4 @@ if st.button("🔍 Analizar", type="primary"):
         st.error("⚠️ Escribe una pregunta.")
     else:
         # Crear vectorizador TF-IDF
-        vectorizer = TfidfVectorizer(
-            tokenizer=tokenize_and_stem,
-            min_df=1  # Incluir todas las palabras
-        )
-        
-        # Ajustar con documentos
-        X = vectorizer.fit_transform(documents)
-        
-        # Mostrar matriz TF-IDF
-        st.markdown("### 📊 Matriz TF-IDF")
-        df_tfidf = pd.DataFrame(
-            X.toarray(),
-            columns=vectorizer.get_feature_names_out(),
-            index=[f"Doc {i+1}" for i in range(len(documents))]
-        )
-        # Tabla con texto fucsia
-        styled_df = df_tfidf.round(3).style.set_properties(**{"color": FUCSIA})
-        st.dataframe(styled_df, use_container_width=True)
-        
-        # Calcular similitud con la pregunta
-        question_vec = vectorizer.transform([question])
-        similarities = cosine_similarity(question_vec, X).flatten()
-        
-        # Encontrar mejor respuesta
-        best_idx = similarities.argmax()
-        best_doc = documents[best_idx]
-        best_score = similarities[best_idx]
-        
-        # Mostrar respuesta
-        st.markdown("### 🎯 Respuesta")
-        st.markdown(f"**Tu pregunta:** {question}")
-        
-        if best_score > 0.01:  # Umbral muy bajo
-            st.success(f"**Respuesta:** {best_doc}")
-            st.info(f"📈 Similitud: {best_score:.3f}")
-        else:
-            st.warning(f"**Respuesta (baja confianza):** {best_doc}")
-            st.info(f"📉 Similitud: {best_score:.3f}")
+        vectorizer =
